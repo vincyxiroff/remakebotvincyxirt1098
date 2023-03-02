@@ -190,6 +190,55 @@ async def ticket(ctx):
     )
 
 
+@bot.event
+async def on_button_click(interaction):
+
+    canal = interaction.channel
+    canal_logs = interaction.guild.get_channel(id_channel_ticket_logs)
+
+    #Select function
+    if interaction.component.custom_id == "Ticket":
+        await interaction.send(
+
+            components = [
+                Select(
+                    placeholder = "Come possiamo aiutarti?",
+                    options = [
+                        SelectOption(label="Question", value="question", description='Se hai una semplice domanda.', emoji='❔'),
+                        SelectOption(label="Help", value="help", description='Se hai bisogno di aiuto da noi.', emoji='🔧'),
+                        SelectOption(label="Report", value="Buy", description='per comprare qualcosa.', emoji='🛒'),
+                    ],
+                    custom_id = "menu")])
+
+    #Call staff function
+    elif interaction.component.custom_id == 'call_staff':
+
+        embed_llamar_staff = discord.Embed(description=f"🔔 {interaction.author.mention} ha chiamato il personale.", color=embed_color)
+        await canal.send(f'<@&{id_staff_role}>', embed=embed_llamar_staff, delete_after= 20)
+
+    #Close ticket function
+    elif interaction.component.custom_id == 'close_ticket':
+
+        embed_cerrar_ticket = discord.Embed(description=f"⚠️ Sei sicuro di voler chiudere il ticket?", color=embed_color)
+        await canal.send(interaction.author.mention, embed=embed_cerrar_ticket, 
+                        components = [[
+                        Button(custom_id = 'close_yes', label = "Yes", style = ButtonStyle.green),
+                        Button(custom_id = 'close_no', label = "No", style = ButtonStyle.red)]])
+
+    #Ticket logs function
+    elif interaction.component.custom_id == 'close_yes':
+
+        await canal.delete()
+        embed_logs = discord.Embed(title="Tickets", description=f"", timestamp = datetime.datetime.utcnow(), color=embed_color)
+        embed_logs.add_field(name="Ticket", value=f"{canal.name}", inline=True)
+        embed_logs.add_field(name="Closed by", value=f"{interaction.author.mention}", inline=False)
+        embed_logs.set_thumbnail(url=interaction.author.avatar_url)
+        await canal_logs.send(embed=embed_logs)
+
+
+    elif interaction.component.custom_id == 'close_no':
+        await interaction.message.delete()
+
 # Eventi
 @bot.event
 async def on_ready():
