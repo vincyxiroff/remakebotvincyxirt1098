@@ -170,6 +170,21 @@ async def on_ready():
     print(Fore.RED + 'Logged in as')
     print(Fore.GREEN + bot.user.name)
     print(Style.RESET_ALL)
+    members = 0
+    for guild in bot.guilds:
+        members += guild.member_count - 1
+
+    await bot.change_presence(activity = discord.Activity(
+        type = discord.ActivityType.watching,
+
+        #Bot status
+        name = f'{members} members' 
+
+    ))
+    print('Ready to support ✅')
+
+
+
 
 
 bot.run(token)
