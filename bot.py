@@ -164,6 +164,32 @@ async def ping(ctx):
     await ctx.send(f"The bot's ping is: ``{round(ping * 1000)}ms``!")
 
 
+#Ticket command
+@bot.command()
+@commands.has_permissions(administrator=True)
+async def ticket(ctx):
+    await ctx.message.delete()
+
+    #Embed title and description
+    embed = discord.Embed(title ='Tickets', description ='Welcome to tickets system.', color=embed_color) 
+
+    #Embed image
+    embed.set_image(url='https://i.imgur.com/FoI5ITb.png')
+
+    await ctx.send(
+        embed = embed,
+
+        #Embed button
+        components = [
+            Button(
+                custom_id = 'Ticket',
+                label = "Crea un ticket",
+                style = ButtonStyle.green,
+                emoji ='🔧')
+        ]
+    )
+
+
 # Eventi
 @bot.event
 async def on_ready():
