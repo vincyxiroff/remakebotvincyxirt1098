@@ -120,6 +120,7 @@ async def giveaway(ctx):
     embed1 = discord.Embed(color=discord.Color(random.randint(0x000000, 0xFFFFFF)),
                            title=f"🎉GIVEAWAY🎉\n`{msg4.content}`", timestamp=futuredate,
                            description=f'React with 🎉 to enter!\nHosted by: {ctx.author.mention}')
+#vincyxirt#1098
 
     embed1.set_footer(text=f"Giveaway will end")
     msg = await giveawaychannel.send(embed=embed1)
