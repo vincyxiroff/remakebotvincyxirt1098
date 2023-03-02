@@ -5,6 +5,8 @@ import re
 from discord.ext import commands
 from datetime import datetime, timedelta
 from colorama import Fore, Style
+from discord_components import Button, Select, SelectOption, ComponentsBot, interaction
+from discord_components.component import ButtonStyle
 
 token = ''  
 
