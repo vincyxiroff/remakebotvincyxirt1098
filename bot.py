@@ -15,7 +15,7 @@ token = ''
 # apposto di ! Mettere il prefisso
 intents = discord.Intents.default()
 bot = commands.Bot(command_prefix='!', case_insensitive=True, intents=intents)
-bot.remove_command('help')
+
 
 id_category = #inserisci qui l'id della categoria dove il bot creerà i canali ticket
 id_channel_ticket_logs = #inserisci qui l'id del canale dove il bot creerà i log dei ticket
