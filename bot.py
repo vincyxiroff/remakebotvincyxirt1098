@@ -206,7 +206,7 @@ async def on_button_click(interaction):
                     options = [
                         SelectOption(label="Question", value="question", description='Se hai una semplice domanda.', emoji='❔'),
                         SelectOption(label="Help", value="help", description='Se hai bisogno di aiuto da noi.', emoji='🔧'),
-                        SelectOption(label="Report", value="Buy", description='per comprare qualcosa.', emoji='🛒'),
+                        SelectOption(label="Buy", value="buy", description='per comprare qualcosa.', emoji='🛒'),
                     ],
                     custom_id = "menu")])
 
@@ -337,13 +337,13 @@ async def on_select_option(interaction):
                     Button(custom_id = 'call_staff', label = "Chiama lo staff", style = ButtonStyle.blue, emoji ='🔔')]])
 
 
-        #Select option | Report
-        elif interaction.values[0] == 'report':
+        #Select option | Buy
+        elif interaction.values[0] == 'buy':
 
-            #Creating ticket channel | Report
+            #Creating ticket channel | Buy
             channel = await guild.create_text_channel(name=f'🚫┃{interaction.author.name}-ticket', category=category)
 
-            #Ticket channel permissions | Report
+            #Ticket channel permissions | Buy
             await channel.set_permissions(interaction.guild.get_role(interaction.guild.id),
                             send_messages=False,
                             read_messages=False)
@@ -368,9 +368,9 @@ async def on_select_option(interaction):
 
             await interaction.send(f'> il {channel.mention} canale è stato creato per acquistare qualcosa.', delete_after= 3)
 
-            #Inside the ticket | Report
-            #Embed inside the ticket | Report
-            embed_question = discord.Embed(title=f'Buy - ¡Hi {interaction.author.name}!', description='In questo ticket possiamo aiutarti con il tuo acquisto.\n\nIf you cant get someone to help you, press the button `🔔 Chiama lo staff`.', color=embed_color)
+            #Inside the ticket | Buy
+            #Embed inside the ticket | Buy
+            embed_question = discord.Embed(title=f'Buy - ¡Ciao {interaction.author.name}!', description='In questo ticket possiamo aiutarti con il tuo acquisto.\n\nIf you cant get someone to help you, press the button `🔔 Chiama lo staff`.', color=embed_color)
             embed_question.set_thumbnail(url=interaction.author.avatar_url)
 
             await channel.send(interaction.author.mention, embed=embed_question, 
