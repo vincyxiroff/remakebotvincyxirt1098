@@ -96,7 +96,7 @@ async def giveaway(ctx):
         msg4 = await bot.wait_for('message', check=check, timeout=30.0)
 
     except asyncio.TimeoutError:
-        await ctx.send("You took to long, please try again.")
+        await ctx.send("Ci hai messo troppo tempo, per favore riprova.")
 
     logembed = discord.Embed(title="Giveaway Logged",
                              description=f"**Prize:** ``{msg4.content}``\n**Winners:** ``{winerscount}``\n**Channel:** {giveawaychannel.mention}\n**Host:** {ctx.author.mention}",
@@ -120,7 +120,7 @@ async def giveaway(ctx):
         if str(reaction.emoji) == "🎉":
             users = await reaction.users().flatten()
             if len(users) == 1:
-                return await msg.edit(embed=discord.Embed(title="Nobody has won the giveaway."))
+                return await msg.edit(embed=discord.Embed(title="Nessuno ha vinto il giveaway."))
     try:
         winners = random.sample([user for user in users if not user.bot], k=winerscount)
     except ValueError:
@@ -128,7 +128,7 @@ async def giveaway(ctx):
     winnerstosend = "\n".join([winner.mention for winner in winners])
 
     win = await msg.edit(embed=discord.Embed(title="WINNER",
-                                             description=f"Congratulations {winnerstosend}, you have won **{msg4.content}**!",
+                                             description=f"Congratulazioni {winnerstosend}, hai vinto **{msg4.content}**!",
                                              color=discord.Color.blue()))
 
 
@@ -142,10 +142,10 @@ async def reroll(ctx):
             users = await reroll.reactions[0].users().flatten()
             users.pop(users.index(bot.user))
             winner = random.choice(users)
-            await ctx.send(f"The new winner is {winner.mention}")
+            await ctx.send(f"Il nuovo vincitore è {winner.mention}")
             break
     else:
-        await ctx.send("No giveaways going on in this channel.")
+        await ctx.send("Nessun giveaway in corso su questo canale.")
 
 
 @bot.command()
