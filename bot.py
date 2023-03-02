@@ -1,3 +1,12 @@
+import io
+import discord
+import yaml
+import chat_exporter
+from discord import Button, ActionRow, ButtonStyle, app_commands
+from discord.ext import commands
+from discord.utils import get
+from database import Database
+from utils import remove_command_message, check_permissions
 import discord
 import asyncio
 import random
@@ -17,16 +26,6 @@ intents = discord.Intents.default()
 bot = commands.Bot(command_prefix='!', case_insensitive=True, intents=intents)
 
 
-GUILD_ID = 123 #Server ID
-TICKET_CHANNEL = 123 #Where the bot should send the Embed + SelectMenu
-
-CATEGORY_ID1 = 123 #Support1 Channel
-CATEGORY_ID2 = 123 #Support2 Channel
-
-TEAM_ROLE1 = 123 #Permissions for Support1
-TEAM_ROLE2 = 123 #Permissions for Support2
-
-LOG_CHANNEL = 123 #Log Channel
 
 
 # Comandi
@@ -184,19 +183,6 @@ async def on_ready():
     print(Fore.RED + 'Logged in as')
     print(Fore.GREEN + bot.user.name)
     print(Style.RESET_ALL)
-    bot.add_view(MyView())
-    bot.add_view(delete())
-    members = 0
-    for guild in bot.guilds:
-        members += guild.member_count - 1
-
-    await bot.change_presence(activity = discord.Activity(
-        type = discord.ActivityType.watching,
-
-        #Bot status
-        name = f'{members} members' 
-
-    ))
     print('Ready to support ✅')
 
 
