@@ -17,6 +17,12 @@ intents = discord.Intents.default()
 bot = commands.Bot(command_prefix='!', case_insensitive=True, intents=intents)
 bot.remove_command('help')
 
+id_category = #inserisci qui l'id della categoria dove il bot creerà i canali ticket
+id_channel_ticket_logs = #inserisci qui l'id del canale dove il bot creerà i log dei ticket
+id_staff_role = #inserire qui l'id del ruolo staff
+embed_color = 0xfcd005 #metti qui un colore esadecimale che conterrà tutti gli embed inviati dal bot
+
+
 
 # Comandi
 
