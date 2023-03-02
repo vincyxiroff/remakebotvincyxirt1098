@@ -8,6 +8,8 @@ from colorama import Fore, Style
 from discord_components import Button, Select, SelectOption, ComponentsBot, interaction
 from discord_components.component import ButtonStyle
 
+# per Installare discord_components eseguire pip install --upgrade discord-components
+
 token = ''  
 
 # apposto di ! Mettere il prefisso
