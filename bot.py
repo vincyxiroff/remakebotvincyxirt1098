@@ -172,8 +172,130 @@ async def ping(ctx):
 
 #Ticket command
 
+class MyView(discord.ui.View):
+    def __init__(self):
+        super().__init__(timeout=None)
 
-                                                attach_files=True,
+    @discord.ui.select(
+        custom_id="support",
+        placeholder="Choose a Ticket option",
+        options=[
+            discord.SelectOption(
+                label="Supporto",
+                emoji="❓",
+                value="support1"
+            ),
+            discord.SelectOption(
+                label="Compra",
+                emoji="❓",
+                value="support2"
+            )
+        ]
+    )
+    async def callback(self, select, interaction):
+        if "support1" in interaction.data['values']:
+            if interaction.channel.id == TICKET_CHANNEL:
+                guild = bot.get_guild(GUILD_ID)
+                for ticket in guild.channels:
+                    if str(interaction.user.id) in ticket.name:
+                        embed = discord.Embed(title=f"puoi solo aprire un Ticket!", description=f"Here is your opend Ticket --> {ticket.mention}", color=0xff0000)
+                        await interaction.response.send_message(embed=embed, ephemeral=True)
+                        await asyncio.sleep(3)
+                        embed = discord.Embed(title="Support-Tickets", color=discord.colour.Color.blue())
+                        await interaction.message.edit(embed=embed, view=MyView())
+                        return
+                category = bot.get_channel(CATEGORY_ID1)
+                ticket_channel = await guild.create_text_channel(f"ticket-{interaction.user.id}", category=category,
+                                                                topic=f"Ticket da {interaction.user} \nUser-ID: {interaction.user.id}")
+
+                await ticket_channel.set_permissions(guild.get_role(TEAM_ROLE1), send_messages=True, read_messages=True, add_reactions=False,
+                                                    embed_links=True, attach_files=True, read_message_history=True,
+                                                    external_emojis=True)
+                await ticket_channel.set_permissions(interaction.user, send_messages=True, read_messages=True, add_reactions=False,
+                                                    embed_links=True, attach_files=True, read_message_history=True,
+                                                    external_emojis=True)
+                await ticket_channel.set_permissions(guild.default_role, send_messages=False, read_messages=False, view_channel=False)
+                embed = discord.Embed(description=f'Benvenuto {interaction.user.mention}!\n'
+                                                   'Uno staff ti risponderà il prima possibile',
+                                                color=discord.colour.Color.blue())
+                await ticket_channel.send(embed=embed, view=delete())
+
+                embed = discord.Embed(description=f'📬 il Ticket è stata creato! Guarda qui --> {ticket_channel.mention}',
+                                        color=discord.colour.Color.green())
+                await interaction.response.send_message(embed=embed, ephemeral=True)
+                await asyncio.sleep(3)
+                embed = discord.Embed(title="Support-Tickets", color=discord.colour.Color.blue())
+                await interaction.message.edit(embed=embed, view=MyView())
+                return
+        if "support2" in interaction.data['values']:
+            if interaction.channel.id == TICKET_CHANNEL:
+                guild = bot.get_guild(GUILD_ID)
+                for ticket in guild.channels:
+                    if str(interaction.user.id) in ticket.name:
+                        embed = discord.Embed(title=f"Puoi aprirne solo un Ticket", description=f"Here is your opend Ticket --> {ticket.mention}", color=0xff0000)
+                        await interaction.response.send_message(embed=embed, ephemeral=True)
+                        await asyncio.sleep(3)
+                        embed = discord.Embed(title="Support-Tickets", color=discord.colour.Color.blue())
+                        await interaction.message.edit(embed=embed, view=MyView())
+                        return 
+                category = bot.get_channel(CATEGORY_ID2)
+                ticket_channel = await guild.create_text_channel(f"ticket-{interaction.user.id}", category=category,
+                                                                    topic=f"Ticket da {interaction.user} \nUser-ID: {interaction.user.id}")
+                await ticket_channel.set_permissions(guild.get_role(TEAM_ROLE2), send_messages=True, read_messages=True, add_reactions=False,
+                                                        embed_links=True, attach_files=True, read_message_history=True,
+                                                        external_emojis=True)
+                await ticket_channel.set_permissions(interaction.user, send_messages=True, read_messages=True, add_reactions=False,
+                                                        embed_links=True, attach_files=True, read_message_history=True,
+                                                        external_emojis=True)
+                await ticket_channel.set_permissions(guild.default_role, send_messages=False, read_messages=False, view_channel=False)
+                embed = discord.Embed(description=f'Benvenuto {interaction.user.mention}!\n'
+                                                   'Uno staff ti risponderà il prima possibile',
+                                                    color=discord.colour.Color.blue())
+                await ticket_channel.send(embed=embed, view=delete())
+
+                embed = discord.Embed(description=f'📬 Il Ticket è stato creato! Guarda qui --> {ticket_channel.mention}',
+                                        color=discord.colour.Color.green())
+                await interaction.response.send_message(embed=embed, ephemeral=True)
+
+                await asyncio.sleep(3)
+                embed = discord.Embed(title="Support-Tickets", color=discord.colour.Color.blue())
+                await interaction.message.edit(embed=embed, view=MyView())
+        return
+
+class delete(discord.ui.View):
+    def __init__(self):
+        super().__init__(timeout=None)
+
+    @discord.ui.button(label="Chiudi Ticket 🎫", style = discord.ButtonStyle.red, custom_id="close")
+    async def close(self, button: discord.ui.Button, interaction: discord.Interaction):
+        channel = bot.get_channel(LOG_CHANNEL)
+
+        fileName = f"{interaction.channel.name}.txt"
+        with open(fileName, "w") as file:
+            async for msg in interaction.channel.history(limit=None, oldest_first=True):
+                time = msg.created_at.replace(tzinfo=timezone('UTC')).astimezone(timezone('Europe/Berlin'))
+                file.write(f"{time} - {msg.author.display_name}: {msg.clean_content}\n")
+
+        embed = discord.Embed(
+                description=f'il ticket si chiuderà in 5Sec.',
+                color=0xff0000)
+        embed2 = discord.Embed(title="Ticket Chiuso!", description=f"Ticket-Name: {interaction.channel.name}\n Chiuso-Da: {interaction.user.name}\n Transcript: ", color=discord.colour.Color.blue())
+        file = discord.File(fileName)
+        await channel.send(embed=embed2)
+        await asyncio.sleep(1)
+        await channel.send(file=file)
+        await interaction.response.send_message(embed=embed)
+        await asyncio.sleep(5)
+        await interaction.channel.delete(reason="Ticket chiuso entro user")
+
+@bot.command()
+@has_permissions(administrator=True)
+async def ticket(ctx):
+    channel = bot.get_channel(TICKET_CHANNEL)
+    embed = discord.Embed(title="Support-Tickets", color=discord.colour.Color.blue())
+    await channel.send(embed=embed, view=MyView())
+
+                                                
 #fine ticket
 
 #Ban unban
