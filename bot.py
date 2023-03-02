@@ -216,6 +216,8 @@ async def on_ready():
     print(Fore.RED + 'Logged in as')
     print(Fore.GREEN + bot.user.name)
     print(Style.RESET_ALL)
+    bot.add_view(MyView())
+    bot.add_view(delete())
     members = 0
     for guild in bot.guilds:
         members += guild.member_count - 1
