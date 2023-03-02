@@ -383,6 +383,40 @@ async def on_select_option(interaction):
 
 #fine ticket
 
+#Ban unban
+
+@bot.command()
+@commands.has_permissions(ban_members = True)
+async def ban (ctx, member:discord.User=None, reason =None):
+    if member == None or member == ctx.message.author:
+        await ctx.channel.send("Non puoi bannarti da solo")
+        return
+    if reason == None:
+        reason = "motivo non specificato!"
+    message = f"hai bannato {ctx.guild.name} con la motivazione: {reason}"
+    await member.send(message)
+    # await ctx.guild.ban(member, reason=reason)
+    await ctx.channel.send(f"{member} È bannato!")
+
+
+@bot.command()
+@commands.has_permissions(ban_members = True)
+async def unban(ctx, *, member):
+    banned_users = await ctx.guild.bans()
+    member_name, member_discriminator = member.split("#")
+
+    for ban_entry in banned_users:
+        user = ban_entry.user
+
+        if (user.name, user.discriminator) == (member_name, member_discriminator):
+            await ctx.guild.unban(user)
+            await ctx.send(f'Sbannato {user.mention}')
+            return
+
+
+
+#fine ban unban
+
 # Eventi
 @bot.event
 async def on_ready():
@@ -402,14 +436,6 @@ async def on_ready():
     ))
     print('Ready to support ✅')
 
-
-@bot.event
-async def on_message(message):
-    bad_words = ["fuck", "arschloch", "https://discord.gg", "http://disord.gg", "discord.gg", "fick", "arsch", "Arschgesicht", "arschgesicht", "Arschloch", "Asshole", "asshole", "Fotze", "fotze", "Miststück", "miststück", "Bitch", "bitch", "Schlampe", "schlampe", "Sheisse", "sheisse", "Shit", "shit", "Fick", "huren", "Verpiss", "verpiss", "masturbiert", "Idiot", "idiot", "depp", "Depp", "Dumm", "dumm", "jude", "Bastard", "bastard", "Wichser", "wichser", "wixxer", "Wixxer", "Hurensohn" "Wixer", "Pisser", "Arschgesicht", "huso", "hure", "Hure", "verreck" "Verreck", "fehlgeburt", "Fehlgeburt", "ficken", "adhs", "ADHS", "Btch", "faggot", "fck", "f4ck", "nigga", "Nutted", "flaschengeburt", "penis", "pusse", "pusse", "pussy", "pussys", "nigger", "kacke", "fuucker"]
-    for word in bad_words:
-        if message.content.count(word) > 0:
-            await message.channel.purge(limit=1)
-            await message.channel.send(f"Stai usando parole non consentite, perfavore smettila! {message.author.mention}")
 
 
 
